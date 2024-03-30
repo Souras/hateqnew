@@ -1,0 +1,32 @@
+project-root/
+├── cmd/
+│   └── main.go
+├── internal/
+│   ├── config/
+│   │   └── config.go
+│   ├── database/
+│   │   └── postgres.go
+│   ├── handlers/
+│   │   ├── doctor.go
+│   │   └── patient.go
+│   ├── models/
+│   │   ├── doctor.go
+│   │   ├── patient.go
+│   │   └── token.go
+│   ├── repositories/
+│   │   ├── doctor.go
+│   │   ├── patient.go
+│   │   └── token.go
+│   ├── routes/
+│   │   └── routes.go
+│   └── services/
+│       ├── doctor.go
+│       ├── patient.go
+│       └── token.go
+|   
+|__ deploy/
+|   |__ Dockerfile
+|   |__ docker-compose.yaml
+|   
+├── go.mod
+└── go.sum
