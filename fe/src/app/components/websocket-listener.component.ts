@@ -14,7 +14,7 @@ export class WebsocketListenerComponent implements OnInit {
 
   ngOnInit(): void {
     // Connect to WebSocket server
-    this.ws = new WebSocket('ws://localhost:5000/ws');
+    this.ws = new WebSocket('ws://localhost:8092/ws');
 
     // Define WebSocket event listeners
     this.ws.onopen = (event) => {

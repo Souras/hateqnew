@@ -1,9 +1,9 @@
 services:
-  # api:
-  #   build: service\websocketAPI
-  #   ports:
-  #     - "8092:5000"
+  api:
+    build: service\websocketAPI
+    ports:
+      - "8092:5000"
   web:
     build: fe
     ports:
-      - "8091:5000"
+      - "8091:8080"

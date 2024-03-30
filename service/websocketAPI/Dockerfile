@@ -14,7 +14,7 @@ COPY . .
 RUN go build -o websocketAPI ./main.go  
 
 # Expose the port your application listens on
-EXPOSE 8081  
+EXPOSE 5000  
 # Replace 8080 with the actual port your app listens on
 
 # Run the compiled binary

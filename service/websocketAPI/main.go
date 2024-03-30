@@ -45,7 +45,7 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 func apiHandler(w http.ResponseWriter, r *http.Request) {
 	// Handle API requests here
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"message": "This is the API endpoint"}`)
+	fmt.Fprintf(w, `{"message": "This is the API endpoint 2"}`)
 }
 
 func main() {
