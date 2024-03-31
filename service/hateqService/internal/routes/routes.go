@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	handlers_doctor "github.com/Souras/hateqnew/service/hateqService/internal/handlers"
+	"github.com/Souras/hateqnew/service/hateqService/internal/handlers/handlers_doctor"
 	"github.com/gorilla/mux"
 	// "your_project/handlers"
 	// "your_project/middlewares"

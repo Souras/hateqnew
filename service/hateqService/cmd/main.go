@@ -7,15 +7,7 @@ import (
 
 	"github.com/Souras/hateqnew/service/hateqService/internal/db"
 	"github.com/Souras/hateqnew/service/hateqService/internal/routes"
-	"github.com/gorilla/websocket"
 )
-
-var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		// Allow all connections
-		return true
-	},
-}
 
 func main() {
 

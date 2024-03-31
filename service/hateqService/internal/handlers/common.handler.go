@@ -3,7 +3,16 @@ package handlers_common
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 )
+
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		// Allow all connections
+		return true
+	},
+}
 
 func websocketHandler(w http.ResponseWriter, r *http.Request) {
 	// Upgrade HTTP connection to WebSocket
