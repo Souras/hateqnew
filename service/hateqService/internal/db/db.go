@@ -3,8 +3,9 @@ package db
 import (
 	"database/sql"
 
+	"github.com/Souras/hateqnew/service/hateqService/internal/models"
+
 	_ "github.com/lib/pq"
-	"github.com/sourabh/models"
 )
 
 var db *sql.DB

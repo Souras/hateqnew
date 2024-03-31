@@ -1,4 +1,4 @@
-package handlers_docker
+package handlers_doctor
 
 import (
 	"database/sql"
@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Souras/hateqnew/service/hateqService/internal/db"
+	"github.com/Souras/hateqnew/service/hateqService/internal/models"
 	"github.com/gorilla/mux"
-	"github.com/sourabh/db"
-	"github.com/sourabh/models"
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {

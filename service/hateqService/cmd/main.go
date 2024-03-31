@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/Souras/hateqnew/service/internal/handlers/"
-	"github.com/gorilla/mux"
+	"github.com/Souras/hateqnew/service/hateqService/internal/db"
+	"github.com/Souras/hateqnew/service/hateqService/internal/routes"
 	"github.com/gorilla/websocket"
 )
 
@@ -16,58 +17,32 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func websocketHandler(w http.ResponseWriter, r *http.Request) {
-	// Upgrade HTTP connection to WebSocket
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		fmt.Println("Failed to upgrade to WebSocket:", err)
-		return
-	}
-	defer conn.Close()
-
-	// Echo back messages received from client
-	for {
-		messageType, p, err := conn.ReadMessage()
-		if err != nil {
-			fmt.Println("Error reading message:", err)
-			break
-		}
-		if string(p) != "" {
-			fmt.Println("reading message:", string(p))
-		}
-		err = conn.WriteMessage(messageType, p)
-		if err != nil {
-			fmt.Println("Error writing message:", err)
-			break
-		}
-	}
-}
-
-func apiHandler(w http.ResponseWriter, r *http.Request) {
-	// Handle API requests here
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"message": "This is the API endpoint 2"}`)
-}
-
 func main() {
-	// Create a new router
-	r := mux.NewRouter()
 
-	// Register WebSocket handler
-	r.HandleFunc("/ws", websocketHandler)
+	err := db.InitDb()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// Register API handler
-	r.HandleFunc("/api", apiHandler)
+	// // Create a new router
+	// r := mux.NewRouter()
 
-	r.HandleFunc("/", handlers.GetProducts).Methods("GET")
-	r.HandleFunc("/products/{id}", handlers.GetProduct).Methods("GET")
-	r.HandleFunc("/products", handlers.CreateProduct).Methods("POST")
-	r.HandleFunc("/products/{id}", handlers.UpdateProduct).Methods("PUT")
+	// // Register WebSocket handler
+	// r.HandleFunc("/ws", handlers_common.websocketHandler)
 
-	// Serve static files
-	fs := http.FileServer(http.Dir("static"))
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+	// // Register API handler
+	// r.HandleFunc("/api", handlers_common.apiHandler)
 
+	// r.HandleFunc("/", handlers_doctor.GetProducts).Methods("GET")
+	// r.HandleFunc("/products/{id}", handlers_doctor.GetProduct).Methods("GET")
+	// r.HandleFunc("/products", handlers_doctor.CreateProduct).Methods("POST")
+	// r.HandleFunc("/products/{id}", handlers_doctor.UpdateProduct).Methods("PUT")
+
+	// // Serve static files
+	// fs := http.FileServer(http.Dir("static"))
+	// r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+
+	r := routes.SetupRoutes()
 	// Start HTTP server
 	fmt.Println("Server listening on :5000")
 	http.ListenAndServe(":5000", r)
