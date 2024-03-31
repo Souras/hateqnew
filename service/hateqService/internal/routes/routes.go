@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	"github.com/Souras/hateqnew/service/hateqService/internal/handlers/handlers_doctor"
+	handlers_doctor "github.com/Souras/hateqnew/service/hateqService/internal/handlers"
 	"github.com/gorilla/mux"
 	// "your_project/handlers"
 	// "your_project/middlewares"
@@ -11,6 +11,15 @@ import (
 
 func SetupRoutes() http.Handler {
 	router := mux.NewRouter()
+
+	// Register API handler
+	router.HandleFunc("/api", handlers_doctor.TestProducts).Methods("GET")
+	router.HandleFunc("/ws", handlers_doctor.WebsocketHandler)
+
+	router.HandleFunc("/", handlers_doctor.GetProducts).Methods("GET")
+	router.HandleFunc("/products/{id}", handlers_doctor.GetProduct).Methods("GET")
+	router.HandleFunc("/products", handlers_doctor.CreateProduct).Methods("POST")
+	router.HandleFunc("/products/{id}", handlers_doctor.UpdateProduct).Methods("PUT")
 
 	// Middleware
 	// router.Use(middlewares.LoggingMiddleware)
@@ -31,14 +40,6 @@ func SetupRoutes() http.Handler {
 
 	// Register WebSocket handler
 	// router.HandleFunc("/ws", handlers_common.websocketHandler)
-
-	// Register API handler
-	router.HandleFunc("/api", handlers_common.apiHandler).Methods("GET")
-
-	router.HandleFunc("/", handlers_doctor.GetProducts).Methods("GET")
-	router.HandleFunc("/products/{id}", handlers_doctor.GetProduct).Methods("GET")
-	router.HandleFunc("/products", handlers_doctor.CreateProduct).Methods("POST")
-	router.HandleFunc("/products/{id}", handlers_doctor.UpdateProduct).Methods("PUT")
 
 	// Serve static files
 	fs := http.FileServer(http.Dir("static"))
