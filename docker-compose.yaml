@@ -1,6 +1,6 @@
 services:
   api:
-    build: service\hateqService
+    build: service/hateqService
     ports:
       - "8092:5000"
   web:
