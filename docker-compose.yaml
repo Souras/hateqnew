@@ -1,6 +1,6 @@
 services:
   api:
-    build: service\websocketAPI
+    build: service\hateqService
     ports:
       - "8092:5000"
   web:

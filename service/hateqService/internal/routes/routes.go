@@ -20,6 +20,7 @@ func SetupRoutes() http.Handler {
 	router.HandleFunc("/products/{id}", handlers_doctor.GetProduct).Methods("GET")
 	router.HandleFunc("/products", handlers_doctor.CreateProduct).Methods("POST")
 	router.HandleFunc("/products/{id}", handlers_doctor.UpdateProduct).Methods("PUT")
+	router.HandleFunc("/products/{id}", handlers_doctor.DeleteProduct).Methods("DELETE")
 
 	// Middleware
 	// router.Use(middlewares.LoggingMiddleware)
