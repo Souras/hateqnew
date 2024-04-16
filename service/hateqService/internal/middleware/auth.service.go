@@ -1,4 +1,4 @@
-package services
+package middleware
 
 import (
 	"encoding/json"
@@ -97,10 +97,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 }
 
 // Protected route that requires authentication
-func protectedHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Protected route accessed successfully")
-}
+// func protectedHandler(w http.ResponseWriter, r *http.Request) {
+// 	w.WriteHeader(http.StatusOK)
+// 	fmt.Fprintf(w, "Protected route accessed successfully")
+// }
 
 // func main() {
 // 	// Register routes

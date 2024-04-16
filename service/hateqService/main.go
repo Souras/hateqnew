@@ -35,6 +35,7 @@ func main() {
 	// r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
 	r := routes.SetupRoutes()
+	// handler := services.CorsMiddleware(http.HandlerFunc(yourHandlerFunction))
 	// Start HTTP server
 	fmt.Println("Server listening on :5000")
 	http.ListenAndServe(":5000", r)

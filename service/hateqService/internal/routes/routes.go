@@ -5,15 +5,15 @@ import (
 
 	handlers_doctor "github.com/Souras/hateqnew/service/hateqService/internal/handlers"
 	"github.com/gorilla/mux"
-	// "your_project/handlers"
-	// "your_project/middlewares"
 )
 
 func SetupRoutes() http.Handler {
 	router := mux.NewRouter()
 
 	// Register API handler
-	router.HandleFunc("/api", handlers_doctor.TestProducts).Methods("GET")
+	router.HandleFunc("/login", middleware.LoginHandler).Methods("GET")
+	// router.HandleFunc("/api", handlers_doctor.TestProducts).Methods("GET")
+	router.Handle("/api", middleware.AuthMiddleware(http.HandlerFunc(handlers_doctor.TestProducts))).Methods("GET")
 	router.HandleFunc("/ws", handlers_doctor.WebsocketHandler)
 
 	router.HandleFunc("/", handlers_doctor.GetProducts).Methods("GET")

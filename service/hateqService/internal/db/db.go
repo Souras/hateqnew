@@ -46,8 +46,21 @@ func InitDb() error {
 	// return nil
 }
 
-func GetProducts() ([]models.QueueData, error) {
-	rows, err := db.Query("SELECT * FROM tokens")
+func GetProducts(date string) ([]models.QueueData, error) {
+	var query = ""
+	var rows *sql.Rows
+	var err error
+	if date == "today" {
+		query = "SELECT * FROM public.tokens WHERE insert_time >= CURRENT_DATE AND insert_time < CURRENT_DATE + interval '1 day' ORDER BY id ASC;"
+		rows, err = db.Query(query)
+	} else if date != "" {
+		query = "SELECT * FROM public.tokens WHERE insert_time > $1 ORDER BY id ASC"
+		rows, err = db.Query(query, date)
+	} else {
+		query = "SELECT * FROM public.tokens ORDER BY id ASC"
+		rows, err = db.Query(query)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +106,7 @@ func CreateProduct(p models.QueueData, insertTime time.Time, startTime time.Time
 	// 	return models.QueueData{}, err
 	// }
 
-	stmt, err := db.Prepare("INSERT INTO tokens (tokennur, name, isactive, iscancelled, timeslot, adminid, mobileno, inserttime, starttime, endtime, operating, osversion, duration) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id")
+	stmt, err := db.Prepare("INSERT INTO tokens (token_number, name, is_active, is_cancelled, time_slot, admin_id, mobile_no, insert_time, start_time, end_time, operating, os_version, duration) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id")
 	if err != nil {
 		return models.QueueData{}, err
 	}

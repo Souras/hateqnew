@@ -14,13 +14,30 @@ import (
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := db.GetProducts()
+	u := r.URL
+	query := u.Query()
+	id := query.Get("date")
+
+	products, err := db.GetProducts(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
-	json.NewEncoder(w).Encode(products)
+
+	response := models.Response{Status: true, Data: products}
+	jsonData, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error marshalling JSON response: %v", err)
+		return
+	}
+
+	// w.WriteHeader(response.Status)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write(jsonData)
+	// json.NewEncoder(w).Encode(jsonData)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {

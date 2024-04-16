@@ -22,3 +22,13 @@ type QueueData struct {
 	OsVersion   string `json:"osVersion"`
 	Duration    string `json:"duration,omitempty"`
 }
+
+type ResponseData struct {
+	status string
+	data   []QueueData
+}
+
+type Response struct {
+	Status bool        `json:"status"`
+	Data   []QueueData `json:"data"`
+}
