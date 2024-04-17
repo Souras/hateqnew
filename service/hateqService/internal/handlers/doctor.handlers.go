@@ -25,7 +25,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := models.Response{Status: true, Data: products}
+	response := models.ResponseData{Status: true, Data: products}
 	jsonData, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -34,8 +34,8 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// w.WriteHeader(response.Status)
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	// w.Header().Set("Content-Type", "application/json")
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(jsonData)
 	// json.NewEncoder(w).Encode(jsonData)
 }
@@ -175,4 +175,56 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{"msg": "Deleted Successfully"})
+}
+
+func GetLatestTokenIDByDate(w http.ResponseWriter, r *http.Request) {
+	var currentTokenReq models.CurrentTokenReq
+	err := json.NewDecoder(r.Body).Decode(&currentTokenReq)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	currentToken, err := db.GetCurrentTokenByAdminID(currentTokenReq)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
+	// json.NewEncoder(w).Encode(currentToken)
+
+	response := models.ResponseData{Status: true, Data: currentToken}
+	jsonData, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error marshalling JSON response: %v", err)
+		return
+	}
+
+	// w.WriteHeader(response.Status)
+	// w.Header().Set("Content-Type", "application/json")
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write(jsonData)
+}
+
+func GetDocStatus(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	adminID := vars["id"]
+
+	currentToken, err := db.GetDocStatus(adminID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
+	// json.NewEncoder(w).Encode(currentToken)
+
+	response := models.ResponseData{Status: true, Data: currentToken}
+	jsonData, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error marshalling JSON response: %v", err)
+		return
+	}
+	w.Write(jsonData)
 }

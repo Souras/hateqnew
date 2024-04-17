@@ -46,6 +46,103 @@ func InitDb() error {
 	// return nil
 }
 
+func GetAdminUsers() ([]models.AdminUserData, error) {
+	var query = "select * from admins"
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []models.AdminUserData
+	for rows.Next() {
+		var p models.AdminUserData
+		err := rows.Scan(&p.ID, &p.AdminID, &p.Name, &p.Pwd, &p.IsOnline, &p.AcceptingToken, &p.AutoRefresh, &p.Coordinates)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, p)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func GetCurrentTokenByAdminID(currentTokenReq models.CurrentTokenReq) ([]models.QueueData, error) {
+	var query = "select * from tokens where is_active = true AND admin_id = $1 AND insert_time > $2"
+	rows, err := db.Query(query, currentTokenReq.AdminID, currentTokenReq.Date)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var token []models.QueueData
+	for rows.Next() {
+		var p models.QueueData
+		err := rows.Scan(&p.ID, &p.TokenNur, &p.Name, &p.IsActive, &p.IsCancelled, &p.TimeSlot, &p.AdminID, &p.MobileNo, &p.InsertTime, &p.StartTime, &p.EndTime, &p.Operating, &p.OsVersion, &p.Duration)
+		if err != nil {
+			return nil, err
+		}
+		token = append(token, p)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return token, nil
+}
+
+// func GetDocStatus(adminID string) (bool, error) {
+// 	var query = "select is_online from admins where admin_id = $1"
+// 	rows, err := db.Query(query, adminID)
+// 	if err != nil {
+// 		return false, err
+// 	}
+// 	defer rows.Close()
+
+// 	var token bool
+// 	for rows.Next() {
+// 		var p models.AdminUserData
+// 		err := rows.Scan(&p.IsOnline)
+// 		if err != nil {
+// 			return false, err
+// 		}
+// 		// token = append(token, p)
+// 	}
+// 	if err := rows.Err(); err != nil {
+// 		return false, err
+// 	}
+// 	return token, nil
+// }
+
+func GetDocStatus(adminID string) (models.AdminUserData, error) {
+	var admins models.AdminUserData // Change variable type to slice of AdminUserData
+	var query = "SELECT name, is_online, accepting_token FROM admins WHERE admin_id = $1"
+	rows, err := db.Query(query, adminID)
+	if err != nil {
+		return admins, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var admin models.AdminUserData
+		err := rows.Scan(&admin.Name, &admin.IsOnline, &admin.AcceptingToken)
+		if err != nil {
+			return admins, err
+		}
+
+		// admins = append(admins, admin)
+		admins.Name = admin.Name
+		admins.IsOnline = admin.IsOnline
+		admins.AcceptingToken = admin.AcceptingToken
+
+	}
+	if err := rows.Err(); err != nil {
+		return admins, err
+	}
+	return admins, nil // Return slice of AdminUserData
+}
+
 func GetProducts(date string) ([]models.QueueData, error) {
 	var query = ""
 	var rows *sql.Rows
